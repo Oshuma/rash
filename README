@@ -1,0 +1,14 @@
+h1. Rash : Ruby, Twitter & Hashtags
+
+h2. Installation
+
+You need :
+* Sinatra
+* HAML
+* rfeedparser
+
+The configuration is in rash.rb. After, just run ruby rash.rb and enjoy.
+
+h2. Examples
+
+* http://twitter.oseflol.com
