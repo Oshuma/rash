@@ -7,17 +7,16 @@ configure do
   Name = "#rash"
   Tagline = "twitter hashtag !"
   Hashtag = "rash"
-  TwitterSearchUrl = "http://search.twitter.com/search.atom?q=%23#{Hashtag}"
+  TwitterSearchUrl = "http://search.twitter.com/search.atom?q=%23"
   Footer = "blah blah, blah."
-  Introduction = "Welcome! To display your twitts here, just put the <a href='http://hashtags.org/'>hashtag</a> ##{Hashtag} in your twitts. Enjoy."
   set_option :haml, :format => :html4
 end
 
-use_in_file_templates!
-
 get '/' do
   header 'Content-Type' => 'text/html; charset=utf-8'
-  pf = FeedParser.parse(TwitterSearchUrl)
+  tag = params[:tag] || Hashtag
+  @introduction = "Welcome! To display your tweets here, just put the <a href='http://hashtags.org/'>hashtag</a> <strong>##{tag}</strong> in your tweets. Enjoy."
+  pf = FeedParser.parse(TwitterSearchUrl + tag)
   @entries = pf.entries
   haml :home
 end
@@ -27,8 +26,10 @@ get '/rash.css' do
   sass :stylesheet
 end
 
+use_in_file_templates!
+
 __END__
-## layout
+@@ layout
 !!! strict
 %html
   %head
@@ -40,7 +41,13 @@ __END__
         %span.title= Name
         %span.subtitle= Tagline
       .intro
-        %p= Introduction
+        %p
+          = @introduction
+          %br
+          Or check out some of these:
+          %a{:href => '/?tag=sinatra', :title => '#sinatra'} #sinatra
+          %a{:href => '/?tag=ruby', :title => '#ruby'} #ruby
+          %a{:href => '/?tag=github', :title => '#github'} #github
       = yield
     .footer
       = Footer
@@ -49,7 +56,7 @@ __END__
       and by
       %a{:href=>'http://github.com/webs/rash'}= "rash"
 
-## home
+@@ home
 - for entry in @entries
   .twit
     %p= entry['title']
@@ -59,9 +66,9 @@ __END__
       the
       - nicetime = Time.parse(entry['published_time'].to_s).strftime('%d/%m/%Y at %H:%M:%S')
       %a{:href=>entry['link']}= nicetime
-  
 
-## stylesheet
+
+@@ stylesheet
 html
   :background #000000 url(http://oseflol.com/images/bg_twitter_black.gif) fixed no-repeat top left
   :color #000
@@ -119,7 +126,7 @@ body
   :margin-top 10px
   :font-size 10px
   :color grey
-  
+
   a
     :color white
 
