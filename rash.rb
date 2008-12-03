@@ -59,7 +59,9 @@ __END__
 @@ home
 - for entry in @entries
   .twit
-    - entry['title'].gsub!(/\#(\w+)/, '<a href="/?tag=\1">#\1</a>')
+    - url_pattern = /(http[s]?:\/\/[-\w\.]+[\d+]?[\/\w\/_\.\~]*[\?\S+]?)/
+    - entry['title'].gsub!(url_pattern, '<a class="url" href="\1">\1</a>')
+    - entry['title'].gsub!(/\#(\w+)/, '<a class="hashtag" href="/?tag=\1">#\1</a>')
     %p= entry['title']
     %span
       ^- from
@@ -136,11 +138,6 @@ body
   :margin-bottom 20px
   :padding 10px
 
-  a
-    :border-bottom 1px dashed #fff
-    :color #777
-    :text-decoration none
-
   p
     :font-size 30px
     :color white
@@ -154,3 +151,13 @@ body
     :color white
     a
       :color white
+
+.hashtag
+  :border-bottom 1px dashed #fff
+  :color #777
+  :text-decoration none
+
+.url
+  :border-bottom 1px dashed #fff
+  :color #aaa
+  :text-decoration none
