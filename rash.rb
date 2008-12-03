@@ -59,11 +59,12 @@ __END__
 @@ home
 - for entry in @entries
   .twit
+    - entry['title'].gsub!(/\#(\w+)/, '<a href="/?tag=\1">#\1</a>')
     %p= entry['title']
     %span
       ^- from
       %a{:href=>entry['href']}= entry['author']
-      the
+      on
       - nicetime = Time.parse(entry['published_time'].to_s).strftime('%d/%m/%Y at %H:%M:%S')
       %a{:href=>entry['link']}= nicetime
 
@@ -131,14 +132,22 @@ body
     :color white
 
 .twit
-  :margin-top 40px
-  :margin-bottom 40px
+  :margin-top 20px
+  :margin-bottom 20px
   :padding 10px
+
+  a
+    :border-bottom 1px dashed #fff
+    :color #777
+    :text-decoration none
 
   p
     :font-size 30px
     :color white
     :font-weight bold
+    :line-height 1.1em
+    :margin 0
+    :margin-bottom 5px
 
   span
     :font-size 18px
